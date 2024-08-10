@@ -27,6 +27,11 @@ export default function ShiftForm({ shift, onSave }) {
       console.error('Error saving shift:', error);
     } else {
       onSave(data);
+      // Limpiar el formulario después de guardar
+      setName('');
+      setPosition('');
+      setStartTime('');
+      setEndTime('');
     }
   };
 
