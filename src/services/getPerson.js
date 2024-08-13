@@ -4,7 +4,7 @@ export const getPerson = async (id) => {
   const supabase = createClient();
   const { data, } = await supabase
     .from("persons")
-    .select("*, person_branches(branches(*))")
+    .select("*")
     .eq("id", id)
     .single();
 

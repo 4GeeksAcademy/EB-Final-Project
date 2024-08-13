@@ -1,62 +1,99 @@
-"use client";
+import React, { useState, useEffect, useMemo } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { ShiftPersonWeek } from "./ShiftPersonWeek";
+import { useRouter } from "next/navigation";
+import { addDays, format, lastDayOfWeek, setWeek } from "date-fns";
 
-import React, { useState } from 'react';
+const WeeklyCalendar = ({ week }) => {
+  const [workers, setWorkers] = useState([]);
+  const router = useRouter();
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.from("persons").select("*");
+      if (error) {
+        console.error("Error fetching workers:", error);
+      } else {
+        const formattedWorkers = data.map((person) => ({
+          name: `${person.name} ${person.last}`,
+          role: person.role,
+          id: person.id,
+          totalHours: 0,
+        }));
+        setWorkers(formattedWorkers);
+      }
+    };
 
-const WeeklyCalendar = () => {
-  const [currentWeek, setCurrentWeek] = useState(new Date());
+    fetchWorkers();
+  }, []);
 
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const weekDates = useMemo(() => {
+    const startOfWeek = setWeek(new Date(), week);
+    const endOfWeek = addDays(startOfWeek, 6);
+    return { startOfWeek, endOfWeek };
+  }, [week]);
 
-  const getWeekDates = (date) => {
-    const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 1));
-    const weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(startOfWeek);
-      day.setDate(startOfWeek.getDate() + i);
-      weekDates.push(day);
-    }
-    return weekDates;
-  };
-
-  const weekDates = getWeekDates(new Date(currentWeek));
-  const month = weekDates[0].toLocaleString('default', { month: 'long' });
+  const daysOfWeek = useMemo(() => {
+    return [
+      weekDates.startOfWeek,
+      addDays(weekDates.startOfWeek, 1),
+      addDays(weekDates.startOfWeek, 2),
+      addDays(weekDates.startOfWeek, 3),
+      addDays(weekDates.startOfWeek, 4),
+      addDays(weekDates.startOfWeek, 5),
+      weekDates.endOfWeek,
+    ];
+  }, [weekDates]);
 
   const handlePreviousWeek = () => {
-    setCurrentWeek(new Date(currentWeek.setDate(currentWeek.getDate() - 7)));
+    router.push(`/shifts/${week - 1}`);
   };
 
   const handleNextWeek = () => {
-    setCurrentWeek(new Date(currentWeek.setDate(currentWeek.getDate() + 7)));
+    router.push(`/shifts/${week + 1}`);
   };
 
   return (
     <div className="overflow-x-auto">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={handlePreviousWeek} className="bg-blue-500 text-white px-4 py-2">Previous Week</button>
-        <h2 className="text-2xl font-bold">{month} {weekDates[0].getDate()} - {weekDates[6].getDate()}</h2>
-        <button onClick={handleNextWeek} className="bg-blue-500 text-white px-4 py-2">Next Week</button>
+        <button
+          onClick={handlePreviousWeek}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Previous Week
+        </button>
+        <h2 className="text-2xl font-bold">
+          {format(weekDates.startOfWeek, "MMMM do")} -{" "}
+          {format(weekDates.endOfWeek, "MMMM do")}
+        </h2>
+        <button
+          onClick={handleNextWeek}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Next Week
+        </button>
       </div>
       <table className="min-w-full bg-white">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Worker</th>
-            <th className="py-2 px-4 border-b">Position</th>
+            <th className="py-2 px-4 border-b">Name</th>
+            <th className="py-2 px-4 border-b">Role</th>
             {daysOfWeek.map((day, index) => (
-              <th key={index} className="py-2 px-4 border-b">{day} {weekDates[index].getDate()}</th>
+              <th key={index} className="py-2 px-4 border-b">
+                {format(day, "MMM d")}
+              </th>
             ))}
             <th className="py-2 px-4 border-b">Estimated Hours</th>
           </tr>
         </thead>
         <tbody>
-          {/* Aquí puedes agregar las filas con los datos correspondientes */}
-          <tr>
-            <td className="py-2 px-4 border-b">Worker Name</td>
-            <td className="py-2 px-4 border-b">Position</td>
-            {daysOfWeek.map((day, index) => (
-              <td key={index} className="py-2 px-4 border-b">Content for {day}</td>
-            ))}
-            <td className="py-2 px-4 border-b">Total Hours</td>
-          </tr>
+          {workers.map((worker, workerIndex) => (
+            <ShiftPersonWeek
+              worker={worker}
+              key={worker.id}
+              daysOfWeek={daysOfWeek}
+            />
+          ))}
         </tbody>
       </table>
     </div>
