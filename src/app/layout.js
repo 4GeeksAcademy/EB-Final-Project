@@ -3,12 +3,15 @@ import "./globals.css";
 import { getUser } from "@/services/getUser";
 import { MyLink } from "@/components/MyLink";
 import { Signout } from "@/components/Signout";
-import { FaHome, FaCalendarAlt } from "react-icons/fa"; // Importa los iconos de Home y Calendar
+import { FaHome, FaCalendarAlt } from "react-icons/fa";
+import { format } from "date-fns";
 
 const inter = Lato({ subsets: ["latin"], weight: "400" });
 
 export default async function RootLayout({ children }) {
   const user = await getUser();
+
+  const currentWeek = format(new Date(), "yyyy-MM-dd");
 
   return (
     <html lang="en">

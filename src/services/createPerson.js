@@ -12,6 +12,10 @@ export const createPerson = async (personData) => {
 
   revalidatePath("/");
 
+  if (error) {
+    console.error("error", error);
+  }
+
   if (data.length > 0) {
     return data[0];
   }

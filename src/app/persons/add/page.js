@@ -1,9 +1,9 @@
-
 "use client";
 
 import { PersonForm } from "@/components/PersonForm";
 import { createPerson } from "@/services/createPerson";
-import { revalidatePath } from "next/cache";
+import { format } from "date-fns";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -11,8 +11,9 @@ export default function AddPerson() {
   const [isSaving, setIsSaving] = useState(false);
 
   const router = useRouter();
+
   const handleSave = async (data) => {
-    const safeData = { dob: data.dob.toString(), ...data };
+    const safeData = { dob: format(data.dob, "yyyy-MM-dd"), ...data };
     setIsSaving(true);
     await createPerson(safeData);
     setIsSaving(false);

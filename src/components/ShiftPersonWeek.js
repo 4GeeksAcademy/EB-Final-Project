@@ -1,34 +1,43 @@
-export function ShiftPersonWeek({ worker, daysOfWeek }) {
+import { createClient } from "@/utils/supabase/server";
+import { format } from "date-fns";
+import { ShiftDateSession } from "./ShiftDateSessions";
+
+export async function ShiftPersonWeek({ person, daysOfWeek, sessions }) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("shifts")
+    .select("*")
+    .eq("persons_id", person.id)
+    .in(
+      "shift_date",
+      daysOfWeek.map((d) => format(d, "yyyy-MM-dd"))
+    );
+
+  if (error) {
+    console.log(error);
+  }
+  const shifts = data;
+  console.log(JSON.stringify(shifts, null, 2));
+
   return (
     <tr>
-      <td className="py-2 px-4 border-b">{worker.name}</td>
-      <td className="py-2 px-4 border-b">{worker.role}</td>
-      {daysOfWeek?.map((day, dayIndex) => (
-        <td key={dayIndex} className="py-2 px-4 border-b">
-          <div className="flex flex-col">
-            {/* <select
-                      value={shift.start}
-                      onChange={(e) => handleShiftChange(workerIndex, dayIndex, 'start', e.target.value)}
-                      className="mb-2"
-                    >
-                      <option value="">Start</option>
-                      {Array.from({ length: 24 }, (_, i) => (
-                        <option key={i} value={i}>{i}:00</option>
-                      ))}
-                    </select>
-                    <select
-                      value={shift.end}
-                      onChange={(e) => handleShiftChange(workerIndex, dayIndex, 'end', e.target.value)}
-                    >
-                      <option value="">End</option>
-                      {Array.from({ length: 24 }, (_, i) => (
-                        <option key={i} value={i}>{i}:00</option>
-                      ))}
-                    </select> */}
-          </div>
-        </td>
-      ))}
-      <td className="py-2 px-4 border-b">{worker.totalHours} hrs</td>
+      <td className="py-2 px-4 border-b">{person.name}</td>
+      <td className="py-2 px-4 border-b">{person.role}</td>
+      {daysOfWeek?.map((day, dayIndex) => {
+        const d = format(day, "yyyy-MM-dd");
+        const shift = shifts.find((s) => s.shift_date === d);
+        return (
+          <td key={dayIndex} className="py-2 px-4 border-b">
+            <ShiftDateSession
+              person={person}
+              sessions={sessions}
+              shift={shift}
+              date={d}
+            />
+          </td>
+        );
+      })}
+      <td className="py-2 px-4 border-b">{person.totalHours} hrs</td>
     </tr>
   );
 }

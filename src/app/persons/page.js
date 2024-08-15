@@ -1,4 +1,3 @@
-
 import { createClient } from "@/utils/supabase/server";
 import { Td } from "@/components/Td";
 import { MyLink } from "@/components/MyLink";
@@ -29,7 +28,7 @@ export default async function PersonsList() {
         </thead>
         <tbody>
           {data?.map((person, index) => (
-            <tr>
+            <tr key={index}>
               <Td>{index + 1}</Td>
               <Td>
                 <MyLink href={`/persons/${person.id}`}>
