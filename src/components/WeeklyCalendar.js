@@ -16,7 +16,6 @@ const WeeklyCalendar = async ({ week }) => {
     name: `${person.name} ${person.last}`,
     role: person.role,
     id: person.id,
-    totalHours: 0,
   }));
 
   const weekDate = setWeek(new Date(), week);
@@ -64,7 +63,6 @@ const WeeklyCalendar = async ({ week }) => {
                 {format(day, "EEE do")}
               </th>
             ))}
-            <th className="py-2 px-4 border-b">Estimated Hours</th>
           </tr>
         </thead>
         <tbody>
@@ -78,6 +76,16 @@ const WeeklyCalendar = async ({ week }) => {
           ))}
         </tbody>
       </table>
+      <div className="mt-8 flex justify-center space-x-4">
+        <h2 className="text-LG font-semibold text-gray-600">
+          SESSION DAY START AT <span className="text-gray-800">11:00 AM</span> /
+          END AT <span className="text-gray-800">16:00 PM</span>
+        </h2>
+        <h2 className="text-lG font-semibold text-gray-600">
+          SESSION NIGHT START AT <span className="text-gray-800">16:00 PM</span>{" "}
+          / END AT <span className="text-gray-800">22:00 PM</span>
+        </h2>
+      </div>
     </div>
   );
 };

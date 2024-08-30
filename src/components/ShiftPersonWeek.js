@@ -33,7 +33,7 @@ export async function ShiftPersonWeek({ person, daysOfWeek, sessions }) {
           </td>
         );
       })}
-      <td className="py-2 px-4 border-b">{person.totalHours} hrs</td>
+      {/* <td className="py-2 px-4 border-b">{person.totalHours} hrs</td> */}
     </tr>
   );
 }
