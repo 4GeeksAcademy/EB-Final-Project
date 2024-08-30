@@ -28,7 +28,7 @@ export function ShiftDateSession({ sessions, shift, person, date }) {
         // Add id
         const newShift = await updateShift(
           shift.id,
-          [shift.sessions, id],
+          [...shift.sessions, id],
           date
         );
         setExistingShift(newShift);

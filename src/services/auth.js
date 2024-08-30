@@ -1,4 +1,3 @@
-
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
@@ -14,6 +13,8 @@ export async function login({ email, password }) {
   if (!error) {
     revalidatePath("/");
     redirect("/");
+  } else {
+    //redirccionar a pagina de error//
   }
 }
 

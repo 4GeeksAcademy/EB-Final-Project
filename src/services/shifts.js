@@ -21,6 +21,7 @@ export async function createShift(personId, date, sessions) {
 export async function updateShift(shiftId, sessions, date) {
   const supabase = createClient();
 
+  console.log({ shiftId, sessions, date });
   await supabase
     .from("shifts")
     .update({ sessions: sessions })

@@ -18,7 +18,7 @@ export default async function RootLayout({ children }) {
       <body className={inter.className}>
         <div className="w-10/12 mx-auto flex flex-col">
           <div className="py-4 flex flex-row justify-between items-center border-b border-primary-dark">
-            <div className="flex items-center text-2xl font-bold text-blue-700">
+            <div className="flex items-center text-3xl font-bold text-blue-700">
               <FaCalendarAlt className="inline-block mr-2" />
               MyShifts
             </div>

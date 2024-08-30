@@ -1,13 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { ShiftPersonWeek } from "./ShiftPersonWeek";
-import {
-  addDays,
-  endOfWeek,
-  format,
-  lastDayOfWeek,
-  setWeek,
-  startOfWeek,
-} from "date-fns";
+import { addDays, endOfWeek, format, setWeek, startOfWeek } from "date-fns";
 import Link from "next/link";
 
 const WeeklyCalendar = async ({ week }) => {
@@ -42,11 +35,11 @@ const WeeklyCalendar = async ({ week }) => {
   ];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto p-6 bg-gray-50 shadow-lg rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <Link
           href={`/shifts/${week - 1}`}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
         >
           Previous Week
         </Link>
@@ -56,14 +49,14 @@ const WeeklyCalendar = async ({ week }) => {
         </h2>
         <Link
           href={`/shifts/${week + 1}`}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
         >
           Next Week
         </Link>
       </div>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full bg-white border border-gray-300">
         <thead>
-          <tr>
+          <tr className="bg-sky-100">
             <th className="py-2 px-4 border-b">Name</th>
             <th className="py-2 px-4 border-b">Role</th>
             {daysOfWeek.map((day, index) => (

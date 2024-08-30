@@ -13,11 +13,7 @@ export async function ShiftPersonWeek({ person, daysOfWeek, sessions }) {
       daysOfWeek.map((d) => format(d, "yyyy-MM-dd"))
     );
 
-  if (error) {
-    console.log(error);
-  }
   const shifts = data;
-  console.log(JSON.stringify(shifts, null, 2));
 
   return (
     <tr>
